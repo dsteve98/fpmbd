@@ -16,19 +16,36 @@
 		<h2><?php echo $_SESSION['username']; ?>'s Dragon Arena</h2>
 	</div>
 	<div class="content">
-			<p> <a href="logout.php" style="color: red;">logout</a> </p>
 		<div>
 			<p>
 				<?php getInfo($con); ?>	
 			</p>
 		</div>
+			<p> <a href="index.php">HOME</a></p>
+			<p> <a href="logout.php" style="color: red;">logout</a> </p>
 		<br>
 		<div class="">
 			<p>Dragon Owned :<br>
-				<?php  getDragon($con); ?>
+				<h4>Element Picker</h5>
+				<h5 id="e1" onclick="switches(1)"><i class="fa fa-tint" aria-hidden="true"></i>Water</h5>
+				<h5 id="e2" onclick="switches(2)"><i class="fa fa-fire" aria-hidden="true"></i>Fire</h5>
+				<h5 id="e3" onclick="switches(3)"><i class="fa fa-leaf" aria-hidden="true"></i>Wind</h5>
+				<h5 id="e4" onclick="switches(4)"><i class="fa fa-paw" aria-hidden="true"></i>Earth</h5>
+				<h5 id="e5" onclick="switches(5)"><i class="fa fa-bolt" aria-hidden="true"></i>Thunder</h5>
+				<?php  getDragonArena($con); ?>
 			</p>
 		</div>
 	</div>
 </body>
-<script type="text/javascript" href="script.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+	function switches(el){
+	$('.1').css("display","none");
+	$('.2').css("display","none");
+	$('.3').css("display","none");
+	$('.4').css("display","none");
+	$('.5').css("display","none");
+	$("."+el).fadeIn(1500);
+}
+</script>
 </html>

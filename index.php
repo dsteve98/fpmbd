@@ -16,8 +16,6 @@
 		<h2><?php echo $_SESSION['username']; ?>'s Dragon Village</h2>
 	</div>
 	<div class="content">
-			<p> <a href="arena.php">ARENA</a></p>
-			<p> <a href="logout.php" style="color: red;">logout</a> </p>
 		<div>
 			<p>
 				<?php lvCheck($con);
@@ -26,6 +24,22 @@
 			</p>
 		</div>
 		<br>
+			<p> <a href="arena.php">ARENA</a></p>
+			<p> <a href="logout.php" style="color: red;">logout</a> </p>
+			<form action="utility.php" method="post">
+				<input type="hidden" <?php echo "value='".$_SESSION['username']."'"; ?>" name="u_id">
+    			<button name="collect" value="collect">COLLECT YOUR GOLD REVENUE</button>
+			</form>
+			<form action="utility.php" method="post">
+				<input type="hidden" <?php echo "value='".$_SESSION['username']."'"; ?>" name="u_id">
+    			<button name="gacha" value="gacha">GACHA NOW! 100G</button>
+			</form>
+			<form action="utility.php" method="post">
+				<input type="hidden" <?php echo "value='".$_SESSION['username']."'"; ?>" name="u_id">
+				Buy Food (1 Food = 1 G) <input type="text" name="amount">
+    			<button name="buyfood" value="buyfood">BUY FOOD!</button>
+			</form>
+			<br>
 		<div class="">
 			<p>Dragon Owned :<br>
 				<h4>Element Picker</h5>

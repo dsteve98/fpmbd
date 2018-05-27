@@ -59,11 +59,11 @@ CREATE TABLE `kepunyaan` (
   KEY `naga_id` (`naga_id`),
   CONSTRAINT `kepunyaan_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `kepunyaan_ibfk_2` FOREIGN KEY (`naga_id`) REFERENCES `naga` (`naga_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 
 /*Data for the table `kepunyaan` */
 
-insert  into `kepunyaan`(`player_id`,`naga_id`,`naga_level`,`kepunyaan_id`) values ('steve',1,3,11),('steve',1,3,12),('steve',1,4,13),('steve',2,1,14),('steve',5,1,15),('halo',3,1,22),('steve',2,2,24),('steve',3,1,25),('steve',3,1,26),('steve',3,1,27),('halo',5,1,28),('halo',1,1,29),('halo',1,1,30),('halo',1,1,31),('saya',5,1,33),('daniels',2,1,34);
+insert  into `kepunyaan`(`player_id`,`naga_id`,`naga_level`,`kepunyaan_id`) values ('steve',1,3,11),('steve',1,3,12),('steve',1,4,13),('steve',2,1,14),('steve',5,1,15),('halo',3,1,22),('steve',2,2,24),('steve',3,1,25),('steve',3,1,26),('steve',3,1,27),('halo',5,1,28),('halo',1,1,29),('halo',1,1,30),('halo',1,1,31),('saya',5,1,33),('daniels',2,1,34),('halo',2,1,35),('halo',2,1,36);
 
 /*Table structure for table `listnaiklevel` */
 
@@ -153,7 +153,7 @@ CREATE TABLE `player` (
 
 /*Data for the table `player` */
 
-insert  into `player`(`player_id`,`password`,`nama`,`totalmenang`,`stamina`,`max_dragon`,`current_gold`,`current_food`,`last_claim_gold`,`u_naga1`,`u_naga2`,`u_naga3`,`last_claim_stamina`) values ('daniels','00e11252db1051387c47521767296b42',NULL,0,10,10,40,0,'2018-05-26 15:50:27',NULL,NULL,NULL,'2018-05-27 14:40:05'),('halo','57f842286171094855e51fc3a541c1e2',NULL,1,20,10,60,100,'2018-05-26 15:45:33',29,30,31,'2018-05-27 18:57:26'),('saya','20c1a26a55039b30866c9d0aa51953ca',NULL,0,10,10,-80,0,'2018-05-26 15:50:08',NULL,NULL,NULL,'2018-05-27 14:40:05'),('steve','484ea5618aaf3e9c851c28c6dbca6a1f',NULL,0,10,15,399370,0,'2018-05-26 15:45:22',27,12,15,'2018-05-27 14:40:05');
+insert  into `player`(`player_id`,`password`,`nama`,`totalmenang`,`stamina`,`max_dragon`,`current_gold`,`current_food`,`last_claim_gold`,`u_naga1`,`u_naga2`,`u_naga3`,`last_claim_stamina`) values ('daniels','00e11252db1051387c47521767296b42',NULL,0,10,10,-160,0,'2018-05-26 15:50:27',NULL,NULL,NULL,'2018-05-27 14:40:05'),('halo','57f842286171094855e51fc3a541c1e2',NULL,1,20,10,119240,100,'2018-05-27 19:59:19',29,30,31,'2018-05-27 19:59:19'),('saya','20c1a26a55039b30866c9d0aa51953ca',NULL,0,10,10,-280,0,'2018-05-26 15:50:08',NULL,NULL,NULL,'2018-05-27 14:40:05'),('steve','484ea5618aaf3e9c851c28c6dbca6a1f',NULL,0,10,15,399170,0,'2018-05-26 15:45:22',27,12,15,'2018-05-27 14:40:05');
 
 /* Function  structure for function  `fn_ceknagavalid` */
 
@@ -320,10 +320,11 @@ BEGIN
 		INNER JOIN (SELECT `naga_id`,`naga_level` FROM `kepunyaan` WHERE p_pid = `player_id`) k
 		on n.`naga_id`=k.`naga_id`) a
 	);
-	IF (@revenue > 10000) THEN
-		SET @revenue = 10000;
+	SET @total = @diff * @revenue;
+	IF (@total > 100000) THEN
+		SET @total = 100000;
 	END IF;
-	UPDATE `player` SET `last_claim_gold` = NOW(), `current_gold` = `current_gold` + (@diff * @revenue) WHERE p_pid = `player_id`;
+	UPDATE `player` SET `last_claim_gold` = TIMESTAMPADD(MINUTE, @diff, `last_claim_gold`), `current_gold` = `current_gold` + (@total) WHERE p_pid = `player_id`;
 	SELECT 0, 'Gold ditambahkan';
     END */$$
 DELIMITER ;
@@ -419,22 +420,6 @@ SELECT `naga_nama`, `naga_level`, `naga_elemen` FROM `naga`,`kepunyaan`
     END */$$
 DELIMITER ;
 
-/* Procedure structure for procedure `sp_dragown` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `sp_dragown` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_dragown`(
-		p_id varchar(15)
-	)
-BEGIN 
-select `kepunyaan_id`,`naga_nama`,`naga_level`,`naga_elemen` from `kepunyaan`,`naga` 
-where(`player_id`=p_id and `kepunyaan`.`naga_id`=`naga`.`naga_id`)
-	order by `kepunyaan`.`naga_id`;
-    END */$$
-DELIMITER ;
-
 /* Procedure structure for procedure `sp_battle` */
 
 /*!50003 DROP PROCEDURE IF EXISTS  `sp_battle` */;
@@ -522,6 +507,22 @@ BEGIN
     END */$$
 DELIMITER ;
 
+/* Procedure structure for procedure `sp_dragown` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_dragown` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_dragown`(
+		p_id varchar(15)
+	)
+BEGIN 
+select `kepunyaan_id`,`naga_nama`,`naga_level`,`naga_elemen` from `kepunyaan`,`naga` 
+where(`player_id`=p_id and `kepunyaan`.`naga_id`=`naga`.`naga_id`)
+	order by `kepunyaan`.`naga_id`;
+    END */$$
+DELIMITER ;
+
 /* Procedure structure for procedure `sp_findfoe` */
 
 /*!50003 DROP PROCEDURE IF EXISTS  `sp_findfoe` */;
@@ -597,39 +598,24 @@ BEGIN
 END */$$
 DELIMITER ;
 
-/* Procedure structure for procedure `sp_showresource` */
+/* Procedure structure for procedure `sp_set1` */
 
-/*!50003 DROP PROCEDURE IF EXISTS  `sp_showresource` */;
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_set1` */;
 
 DELIMITER $$
 
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_showresource`(
-		p_id varchar(15)
-	)
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set1`(p_id VARCHAR(15),k_id INT)
 BEGIN
-	select `current_gold` gold,`current_food` food,`stamina` from `player` where `player_id`=p_id;
+	SET @u2 = (SELECT `u_naga2` FROM `player` WHERE `player_id` = p_id);
+	SET @u3 = (SELECT `u_naga3` FROM `player` WHERE `player_id` = p_id);
+	IF (k_id = @u2 OR k_id = @u3) THEN
+		SELECT -1,'Tidak boleh memilih naga yang sama';
+	ELSEIF (`fn_cekpunyanaga`(p_id,k_id)) THEN
+		UPDATE `player` SET `u_naga1`= k_id WHERE `player_id`=p_id;
+		SELECT 0, 'Deploy sukses';
+	ELSE SELECT -2, 'Deploy gagal, harap divalidasi';
+	END IF;
     END */$$
-DELIMITER ;
-
-/* Procedure structure for procedure `sp_upgrademaxdragon` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `sp_upgrademaxdragon` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_upgrademaxdragon`(
-	p_pid VARCHAR(15)
-    )
-BEGIN
-	SET @gold = (SELECT `current_gold` from `player` where p_pid = `player_id`);
-	SET @maxd = (SELECT `max_dragon` FROM `player` WHERE p_pid = `player_id`);
-	
-	IF (@gold >= f_upgrademaxdvalue(p_pid) AND @maxd < 100) THEN
-		UPDATE `player` SET `current_gold` = `current_gold` - f_upgrademaxdvalue(p_pid), `max_dragon` = `max_dragon` + 5 WHERE p_pid = `player_id`;	
-		SELECT 0, 'upgrade sukses';
-	ELSE SELECT -1, 'Gagal, gold Anda kurang!';
-	End if;
-END */$$
 DELIMITER ;
 
 /* Procedure structure for procedure `sp_lvlup` */
@@ -640,7 +626,7 @@ DELIMITER $$
 
 /*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_lvlup`(
 	p_id varchar(15),
-	P_nid int(11)
+	p_nid int(11)
 )
 BEGIN
 	if exists(select 1 from `kepunyaan` where(`player_id`=p_id and `kepunyaan_id`=p_nid)) then
@@ -682,6 +668,81 @@ BEGIN
 	ELSE SELECT -1, 'Gagal, tidak ditemukan!';
 	END IF;
     END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `sp_set2` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_set2` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set2`(p_id VARCHAR(15),k_id INT)
+BEGIN
+	SET @u1 = (SELECT `u_naga1` FROM `player` WHERE `player_id` = p_id);
+	SET @u3 = (SELECT `u_naga3` FROM `player` WHERE `player_id` = p_id);
+	IF (k_id = @u1 OR k_id = @u3) THEN
+		SELECT -1,'Tidak boleh memilih naga yang sama';
+	ELSEIF (`fn_cekpunyanaga`(p_id,k_id)) THEN
+		UPDATE `player` SET `u_naga2`= k_id WHERE `player_id`=p_id;
+		SELECT 0, 'Deploy sukses';
+	ELSE SELECT -2, 'Deploy gagal, harap divalidasi';
+	END IF;
+    END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `sp_set3` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_set3` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set3`(p_id VARCHAR(15),k_id INT)
+BEGIN
+	SET @u1 = (SELECT `u_naga1` FROM `player` WHERE `player_id` = p_id);
+	SET @u2 = (SELECT `u_naga2` FROM `player` WHERE `player_id` = p_id);
+	IF (k_id = @u1 OR k_id = @u2) THEN
+		SELECT -1,'Tidak boleh memilih naga yang sama';
+	ELSEIF (`fn_cekpunyanaga`(p_id,k_id)) THEN
+		UPDATE `player` SET `u_naga3`= k_id WHERE `player_id`=p_id;
+		SELECT 0, 'Deploy sukses';
+	ELSE SELECT -2, 'Deploy gagal, harap divalidasi';
+	END IF;
+    END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `sp_showresource` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_showresource` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_showresource`(
+		p_id varchar(15)
+	)
+BEGIN
+	select `current_gold` gold,`current_food` food,`stamina` from `player` where `player_id`=p_id;
+    END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `sp_upgrademaxdragon` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_upgrademaxdragon` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_upgrademaxdragon`(
+	p_pid VARCHAR(15)
+    )
+BEGIN
+	SET @gold = (SELECT `current_gold` from `player` where p_pid = `player_id`);
+	SET @maxd = (SELECT `max_dragon` FROM `player` WHERE p_pid = `player_id`);
+	
+	IF (@gold >= f_upgrademaxdvalue(p_pid) AND @maxd < 100) THEN
+		UPDATE `player` SET `current_gold` = `current_gold` - f_upgrademaxdvalue(p_pid), `max_dragon` = `max_dragon` + 5 WHERE p_pid = `player_id`;	
+		SELECT 0, 'upgrade sukses';
+	ELSE SELECT -1, 'Gagal, gold Anda kurang!';
+	End if;
+END */$$
 DELIMITER ;
 
 /*Table structure for table `v_upgradedone` */
