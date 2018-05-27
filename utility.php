@@ -13,7 +13,7 @@ function getDragon($db){
 	$db->next_result();
 	$query2 = mysqli_query($db,"CALL sp_dragown('$uname')") or die("Query fail: " . mysqli_error($db));
 	if(mysqli_num_rows($query2) > 0) {
-		 echo "<table style='width:50%'>
+		 echo "<table class='dragonlist' border='1'>
   				<tr>
     				<th>Nama Naga</th>
     				<th>Level Naga</th>

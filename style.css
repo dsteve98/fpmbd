@@ -4,6 +4,7 @@
 }
 body {
 	font-size: 120%;
+	font-family: verdana;
 	background: #F8F8FF;
 	background-image: url("pat1.jpg");
 }
@@ -89,4 +90,16 @@ img{
 	margin: 5px;
 	width: 80%;
 	height: 14vw;
+}
+
+h5{
+	display: inline;
+	margin-right: 60px;
+	margin-left: 50px;
+}
+
+.dragonlist{
+	width: 50%;
+	margin: 0 auto;
+	text-align: center;
 }
