@@ -18,7 +18,9 @@
 			<p> <a href="logout.php" style="color: red;">logout</a> </p>
 		<div>
 			<p>
-				<?php getInfo($con); ?>	
+				<?php lvCheck($con);
+				staminaCheck($con);
+				getInfo($con); ?>	
 			</p>
 		</div>
 		<br>

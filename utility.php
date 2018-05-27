@@ -26,4 +26,16 @@ function getDragon($db){
 	else echo "No Dragon";	
 }
 
+function lvCheck($db){
+	$uname = $_SESSION['username'];
+	$db->next_result();
+	$query = mysqli_query($db,"CALL sp_growthcheck()") or die("Query fail: " . mysqli_error($db));
+}
+function staminaCheck($db){
+	$uname = $_SESSION['username'];
+	$db->next_result();
+	$query = mysqli_query($db,"CALL sp_claimstamina('$uname')") or die("Query fail: " . mysqli_error($db));
+}
+
+
 ?>
