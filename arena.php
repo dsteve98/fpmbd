@@ -20,6 +20,7 @@
 			<p>
 				<?php getInfo($con); ?>	
 			</p>
+			<br>
 		</div>
 			<p> <a href="index.php">HOME</a></p>
 			<p> <a href="logout.php" style="color: red;">logout</a> </p>

@@ -1,38 +1,33 @@
 <?php
 
 require('db.php');
-$isok = 0;
-// If form submitted, insert values into the database.
-if (isset($_REQUEST['username'])){
-        // removes backslashes
-  $username = stripslashes($_REQUEST['username']);
-        //escapes special characters in a string
-  $username = mysqli_real_escape_string($con,$username); 
-  $email = stripslashes($_REQUEST['email']);
-  $email = mysqli_real_escape_string($con,$email);
-  $password = stripslashes($_REQUEST['password']);
-  $password = mysqli_real_escape_string($con,$password);
-  $trn_date = date("Y-m-d H:i:s");
+if (isset($_POST['reg_user'])) {
+    // receive all input values from the form
+    $username = mysqli_real_escape_string($con, $_POST['username']);
+    $password_1 = mysqli_real_escape_string($con, $_POST['password_1']);
+    $password_2 = mysqli_real_escape_string($con, $_POST['password_2']);
 
-    $sql_u = "SELECT * FROM users WHERE username='$username'";
-    $sql_e = "SELECT * FROM users WHERE email='$email'";
-    $res_u = mysqli_query($con, $sql_u);
-    $res_e = mysqli_query($con, $sql_e);
+    // form validation: ensure that the form is correctly filled
+    if (empty($username)) { array_push($errors, "Username is required."); }
+    if (empty($password_1)) { array_push($errors, "Password is required."); }
 
-    if (mysqli_num_rows($res_u) > 0) {
-      $name_error = "Sorry... username already taken";  
-    }else if(mysqli_num_rows($res_e) > 0){
-      $email_error = "Sorry... email already taken";    
-    }else{
-        //query for inserting to database
-        $query = "INSERT into `users` (username, password, email, trn_date) VALUES ('$username', '".md5($password)."', '$email', '$trn_date')";
-        $result = mysqli_query($con,$query);
-        if($result){
-            $isok = 1;
-            echo "<div class='form'> <h3>You are registered successfully.</h3>
-            <br/>Click here to <a href='login.php'>Login</a></div>";
-        }
+    if ($password_1 != $password_2) {
+      array_push($errors, "The two passwords do not match.");
     }
-        
-    }else{}
+
+    $query = mysqli_query($con,"CALL sp_daftar('$username','$password_1')");
+    $row = mysqli_fetch_row($query);
+    if($row[0] == -1){
+          array_push($errors, $row[1]);
+    }
+
+    // register user if there are no errors in the form
+    if (count($errors) == 0) {
+      $_SESSION['username'] = $username;
+      $_SESSION['success'] = "You are now logged in";
+      $_SESSION['LAST_ACTIVITY'] = time();
+      header('location: index.php');
+    }
+
+  }
 ?>

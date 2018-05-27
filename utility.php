@@ -49,7 +49,7 @@ function getDragon($db){
 		 echo "<table class='dragonlist' border='1'>
   				<tr>
     				<th>Nama Naga</th>
-    				<th>Level Naga</th>
+    				<th>Level</th>
     				<th>Upgrade</th>
     				<th>Sell</th>
   				</tr> ";
@@ -62,7 +62,7 @@ function getDragon($db){
 			</form>
 			</td></tr>";
 		}
-		echo "</table>";
+		echo "</table><br>";
 	}
 	else echo "No Dragon";	
 	$db->next_result();
@@ -77,21 +77,37 @@ function getDragonArena($db){
 		 echo "<table class='dragonlist' border='1'>
   				<tr>
     				<th>Nama Naga</th>
-    				<th>Level Naga</th>
+    				<th>Level</th>
     				<th>Deploy 1</th>
     				<th>Deploy 2</th>
     				<th>Deploy 3</th>
   				</tr> ";
 		while($row2 = mysqli_fetch_assoc($query2)){
-			echo "<tr class='".$row2["naga_elemen"]."'><td>" .$row2["naga_nama"]. "</td><td>" .$row2["naga_level"]. "</td><td>Feed</td><td>
+			echo "<tr class='".$row2["naga_elemen"]."'><td>" .$row2["naga_nama"]. "</td><td>" .$row2["naga_level"]. "</td>
+			<td>
 			<form action='utility.php' method='post'>
 				<input type='hidden' value='".$_SESSION['username']."'' name='u_id'>
 				<input type='hidden' value='".$row2["kepunyaan_id"]."'' name='k_id'>
-    			<input type='submit' value='Sell' name='sellsubmit'>
+    			<input type='submit' value='Set' name='set1'>
 			</form>
-			</td></tr>";
+			</td>
+			<td>
+			<form action='utility.php' method='post'>
+				<input type='hidden' value='".$_SESSION['username']."'' name='u_id'>
+				<input type='hidden' value='".$row2["kepunyaan_id"]."'' name='k_id'>
+    			<input type='submit' value='Set' name='set2'>
+			</form>
+			</td>
+			<td>
+			<form action='utility.php' method='post'>
+				<input type='hidden' value='".$_SESSION['username']."'' name='u_id'>
+				<input type='hidden' value='".$row2["kepunyaan_id"]."'' name='k_id'>
+    			<input type='submit' value='Set' name='set3'>
+			</form>
+			</td>
+			</tr>";
 		}
-		echo "</table>";
+		echo "</table><br>";
 	}
 	else echo "No Dragon";	
 	$db->next_result();

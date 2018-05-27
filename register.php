@@ -25,32 +25,17 @@
   }
 </style>
 <body>
-<?php 
-    if($isok < 1){
-?>
 <div class="content">
 <h1>Registration</h1>
-<form name="registration" action="" method="post">
-<div <?php if (isset($name_error)): ?> class="form_error" <?php endif ?> >
-      <input type="text" name="username" placeholder="Username (Alphanumeric Only)" style="width: 460px;" required>
-      <?php if (isset($name_error)): ?>
-        <span><?php echo $name_error; ?></span>
-      <?php endif ?>
-    </div>
-    <div <?php if (isset($email_error)): ?> class="form_error" <?php endif ?> >
-      <input type="email" name="email" placeholder="Email" style="width: 460px;" required>
-      <?php if (isset($email_error)): ?>
-        <span><?php echo $email_error; ?></span>
-      <?php endif ?>
-    </div>
-    <div>
-        <input type="password"  placeholder="Password" name="password" style="width: 460px;" required>
-    </div>
-<input type="submit" name="submit" value="Register" />
+<form name="registration" action="register.php" method="post">
+<div class="form_error" >
+    <input type="text" name="username" placeholder="Username (alphanumeric)" required><br>
+    <input type="password" name="password_1" placeholder="Password" required=><br>
+    <input type="password" name="password_2" placeholder="Retype Password" required><br>
+<input type="submit" name="reg_user" value="Register" />
 </form>
 Already have one? <a href="login.php">Login here.</a>
 </div>
-<?php } ?>
 </body>
 <script type="text/javascript">
     $("input[name='username'] ").focus(function (e) {
