@@ -25,6 +25,7 @@
 		</div>
 		<br>
 			<p> <a href="arena.php">ARENA</a></p>
+			<p> <a href="tutorial.php">TUTORIAL?</a></p>
 			<p> <a href="logout.php" style="color: red;">logout</a> </p>
 			<form action="utility.php" method="post">
 				<input type="hidden" <?php echo "value='".$_SESSION['username']."'"; ?>" name="u_id">
@@ -36,7 +37,7 @@
 			</form>
 			<form action="utility.php" method="post">
 				<input type="hidden" <?php echo "value='".$_SESSION['username']."'"; ?>" name="u_id">
-				Buy Food (1 Food = 1 G) <input type="text" name="amount">
+				Buy Food (1 Food = 1 G) <input type="number" name="amount">
     			<button name="buyfood" value="buyfood">BUY FOOD!</button>
 			</form>
 			<br>

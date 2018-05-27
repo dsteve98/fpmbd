@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Home</title>
+	<title>Arena</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -23,8 +23,17 @@
 			<br>
 		</div>
 			<p> <a href="index.php">HOME</a></p>
+			<p> <a href="tutorial.php">TUTORIAL?</a></p>
 			<p> <a href="logout.php" style="color: red;">logout</a> </p>
 		<br>
+		<div id="deploy">
+			<?php getEnemy($con); ?>
+			<br>
+		</div>
+		<div id="deploy">
+			<?php getDeploy($con); ?>
+			<br>
+		</div>
 		<div class="">
 			<p>Dragon Owned :<br>
 				<h4>Element Picker</h5>
